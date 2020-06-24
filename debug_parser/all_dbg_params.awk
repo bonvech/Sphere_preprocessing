@@ -15,7 +15,7 @@ BEGIN {
     printf "\tcompass"
     printf "\tP0_code\tT0_code\tP_hpa0\tT0,C"
     printf "\tP1_code\tT1_code\tP_hpa1\tT1,C"
-    #printf "\tdP,kpa"
+    #printf "\tdP,kpa" ## dP is not printed
     printf "\tU15,V\tU5,V\tUac,V\tI,A\tTpow,C\tTmos,C\tBot,C\tTop,C"
     printf "\tNum\tClin1\tClin2\tClinTh"
     NUM=0
@@ -154,6 +154,7 @@ BEGIN {
         }
     }
 
+    ## dP is not printed now
     if(/DeltaP/)
     {
         if(NF == 9)
@@ -169,10 +170,9 @@ BEGIN {
     if(/U15/)
     {
         print_flag=1
-        gsub(/V/,"")
-        sub(/U5=/,"")
-        sub(/A/,"")
-        #printf "\t"$2"\t"$3"\t"$5"\t"$7
+        gsub(/V/, "")
+        sub(/U5=/, "")
+        sub(/A/, "")
         U1=$2
         U2=$3
         U3=$5
@@ -185,26 +185,17 @@ BEGIN {
         {
             sub(/oC/, " ")
             sub(/kod/, " ")
-            #print "\n"$0
             tpow=$4
         }
     }
 
     if(/read_mosaic/)
     {
-        sub(/Debug/," ")
+        sub(/Debug/, " ")
         sub(/SetRg:/," ")
-        sub(/kod=/," ")
-        sub(/oC/," ")
+        sub(/kod=/, " ")
+        sub(/oC/, " ")
         tmos=$3
-        #if(sub(/oCLED:/," ",$3))
-        #    tmos=$3
-        #else
-        #{
-        #    printf "\n"$0
-        #    sub(/oCLED:/," ",$2)
-        #    tmos = substr($2,12,6)
-        #}
     }
 
     ### Compass
@@ -232,22 +223,14 @@ BEGIN {
     }
     if(/Angles/) # 2012
     {
-        #print $0
         # Найти номер слова Angles:
-        #for(i = 1; i <= NF; i++)
-        #    if(($i == "Angles:") || ($i == "1Angles:"))
-        #        iang = i
         for(i = 1; i <= NF; i++)
             if(index($i, "Angles"))
                 iang = i
 
         clin1=$(iang + 1)
         clin2=$(iang + 2)
-        #print "\n"$0"\t"iang"\t==>"clin1"\t"clin2
-
         iang=0
-        #clin1=$2
-        #clin2=$3
     }
 
     ### Top Bottom
@@ -260,8 +243,6 @@ BEGIN {
         T_bot=$(ib + 1)
         T_top=$(ib + 3)
         ib=0
-        #T_bot=$2
-        #T_top=$4
     }
 }
 END{
