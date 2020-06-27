@@ -1,4 +1,6 @@
-# 2020.02.05
+## @date 2020.06.26
+## @author bonvech@yandex.ru
+## @warning input dbg files must have name as: *flightN.dbg to right parse flight number
 
 BEGIN{
     head = 0        ## flag to print header
@@ -12,11 +14,11 @@ BEGIN{
         high_kod[i] = -1
     }
 
-    # print header
+    ## print header
     if(head)
     {
         printf "year\tmonth\tday"
-        printf "\tflight\tDD HH MM"
+        printf "\tflight\tHH MM SS"
         for(i = 0; i < CHAN; i++)
         {
             printf "\t"i
@@ -41,7 +43,7 @@ BEGIN{
     }
     if(check == 1)
     {
-        # stop check and print results
+        # stop check and set print flag on
         if(/delta/)
         {
             check = 0
@@ -87,6 +89,8 @@ BEGIN{
 
         if(print_flag)
         {
+            print_flag = 0
+
             ### print high kods
             #printf FILENAME"\t"
             printf year"\t"month"\t"day
@@ -97,7 +101,6 @@ BEGIN{
                 printf "\t"high_kod[i]
             }
             printf("\n")
-            print_flag = 0
         }
     }
 
