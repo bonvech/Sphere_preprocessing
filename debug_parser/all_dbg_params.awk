@@ -7,25 +7,34 @@
 # if every_sec != 0 - print extracted information after GPGGA parsed string (every 1 or 10 sec).
 # if every+sec == 0 - print extracted information after U15   parsed string (every min).
 BEGIN {
-    every_sec=1
+    every_sec=0     ## flag to prin every sec or every min
+    #fhead = 1       ## flag to print header
 
-    printf "year\tmonth\tday"
-    printf "\ttime\tN\tE\tH\tH-455"
-    printf "\tGqi\tGsn\tGhdp\tGgs"
-    printf "\tcompass"
-    printf "\tP0_code\tT0_code\tP_hpa0\tT0,C"
-    printf "\tP1_code\tT1_code\tP_hpa1\tT1,C"
-    #printf "\tdP,kpa" ## dP is not printed
-    printf "\tU15,V\tU5,V\tUac,V\tI,A\tTpow,C\tTmos,C\tBot,C\tTop,C"
-    printf "\tNum\tClin1\tClin2\tClinTh"
+    print_flag=0    ## flag to print result line
+    flight = 0      ## flight number
     NUM=0
     bar=0
     P0=NaN
     P1=NaN
-    print_flag=0
     compass=NaN
     day=NaN
+
+    ## print header 
+    if(fhead)
+    {
+        printf "year\tmonth\tday"
+        printf "\tflight"
+        printf "\ttime\tN\tE\tH\tH-455"
+        printf "\tGqi\tGsn\tGhdp\tGgs"
+        printf "\tcompass"
+        printf "\tP0_code\tT0_code\tP_hpa0\tT0,C"
+        printf "\tP1_code\tT1_code\tP_hpa1\tT1,C"
+        #printf "\tdP,kpa" ## dP is not printed
+        printf "\tU15,V\tU5,V\tUac,V\tI,A\tTpow,C\tTmos,C\tBot,C\tTop,C"
+        printf "\tNum\tClin1\tClin2\tClinTh"
+    }
 }
+############   main loop   ######################
 {
     #printf "\n"clin1"\t"clin2"\t"clinT
     if((/time NOW/) && (day == NaN))
@@ -71,7 +80,8 @@ BEGIN {
             NUM++
             print_flag=0
 
-            printf "\n"year"\t"month"\t"day
+            printf year"\t"month"\t"day
+            printf "\t"flight
             printf("\t%6d\t%9.4f\t%10.4f\t%6.1f\t%6.1f", g2,g3,g5,g10,h)
             printf "\t"g7"\t"g8"\t"g9"\t"g12
             printf "\t"compass
@@ -95,7 +105,7 @@ BEGIN {
             printf "\t"U1"\t"U2"\t"U3"\t"U4
             printf "\t"tpow"\t"tmos
             printf "\t"T_bot"\t"T_top"\t"NUM
-            printf "\t"clin1"\t"clin2"\t"clinT
+            printf "\t"clin1"\t"clin2"\t"clinT"\n"
 
             ## init variables
             bar=0
@@ -244,8 +254,17 @@ BEGIN {
         T_top=$(ib + 3)
         ib=0
     }
+
+    ##### GET flight number  #####
+    if(flight == 0)
+    {
+        name = FILENAME
+        gsub(/.dbg/, "", name)
+        # найти длину строки и взять последний символ
+        flight = substr(name, length(name))
+    }
 }
 END{
-    print "\n"
+    #print "\n"
 }
 
