@@ -116,4 +116,15 @@ BEGIN{
 }
 ##################
 END{
+    ### print high kods
+    #printf FILENAME"\t"
+#    printf year"\t"month"\t"day
+#    printf "\t"flight"\t"hh":"mm":"ss
+#    for(i = 0; i < CHAN; i++)
+#    {
+#        #printf "\t"i":"high_kod[i]
+#        printf "\t"high_kod[i]
+#    }
+#    printf("\n")
+
 }
